@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block pageheading %}
+    <form class="myform" method="post">
+            <div class="form-group">
+                <div class="form-label"> Date: </div>
+                <div class="form-element"><input type="text" name="booking_date"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label"> where: </div>
+                <div class="form-element"><input type="text" name="where"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label"> Sumbit: </div>
+                <div class="form-element"><input type="submit" value="Signup"></div>
+            </div>
+    </form>
+    <br>
+    <br>
+    <br>
+    <p> Already made a booking? <a href="/print_booking"> Click here </a></p>
+{% endblock %}

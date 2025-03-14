@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block pageheading %}
+<h3> all the booking display </h3>
+{% endblock %}
+
+{% block main %}
+    <div class="products">
+    {% for all_booking in booking_list %}
+        <div class="product-box">
+            <h3 class="product-box-heading"> {{ all_booking[0] }} </h3>
+            <p class="product-box-info"> {{ all_booking[1] }} </p>
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}
