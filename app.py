@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
 from sqlite3 import Error
+from flask_bcrypt import Bcrypt
 
 DATABASE = 'sessions_db'
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
+app.secret_key("wdjidwdwkdwa")
 
 
 def connect_to_database(db_file):
@@ -22,6 +25,16 @@ def render_home():  # put application's code here
 
 @app.route('/log_in', methods=['POST', 'GET'])
 def render_log_in():  # put application's code here
+    if request.method == 'POST':
+        email = request.form['email'].strip().lower()
+        password=request.form['password']
+        query="SELECT Student_id,fname,lname,password,email FROM session_db WHERE email=?"
+        con=connect_to_database(DATABASE)
+        cur=con.cursor()
+        cur.execute(query,(email))
+        user_info=cur.fetcall()
+        cur.close()
+        print(user_info)
     return render_template('log_in.html')
 
 
@@ -37,12 +50,14 @@ def render_sign_up():
             return redirect("/signup?error=passwords+do+not+match")
         if len(password) < 8:
             return redirect("/signup?error=password+too+short+must+be+longer+than+8")
+        hashed_password=bcrypt.generate_password_hash(password)
         connection = connect_to_database(DATABASE)
         query_insert = "INSERT INTO Session_db(fname,lname,password,email)VALUES(?,?,?,?)"
         cur = connection.cursor()
         cur.execute(query_insert, (fname, lname, password, email))
         connection.commit()
         product_list = cur.fetchall()
+        return render_template('log_in.html')
 
     return render_template('sign_up.html')
 
