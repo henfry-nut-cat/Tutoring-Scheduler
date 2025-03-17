@@ -8,6 +8,13 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key=("wdjidwdwkdwa")
 
+def is_logged_in():
+    if (session["user_id"]==None):
+        print("Not logged in")
+        return False
+    else:
+        print("Logged in")
+        return True
 
 def connect_to_database(db_file):
     try:
@@ -25,6 +32,8 @@ def render_home():  # put application's code here
 
 @app.route('/log_in', methods=['POST', 'GET'])
 def render_log_in():  # put application's code here
+    if is_logged_in():
+        return redirect('/booking')
     if request.method == 'POST':
         email = request.form['email'].strip().lower()
         password=request.form['password']
@@ -47,6 +56,9 @@ def render_log_in():  # put application's code here
 
         session["email"]=email
         session["user_id"]=user_id
+        session["first_name"]=first_name
+        print(session)
+        return redirect("/")
 
 
     return render_template('log_in.html')
@@ -70,7 +82,6 @@ def render_sign_up():
         cur = connection.cursor()
         cur.execute(query_insert, (fname, lname, hashed_password, email))
         connection.commit()
-        product_list = cur.fetchall()
         return render_template('log_in.html')
 
     return render_template('sign_up.html')
