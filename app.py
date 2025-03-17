@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 import sqlite3
 from sqlite3 import Error
 from flask_bcrypt import Bcrypt
@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 DATABASE = 'sessions_db'
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-app.secret_key("wdjidwdwkdwa")
+app.secret_key=("wdjidwdwkdwa")
 
 
 def connect_to_database(db_file):
@@ -33,8 +33,22 @@ def render_log_in():  # put application's code here
         cur=con.cursor()
         cur.execute(query,(email))
         user_info=cur.fetcall()
-        cur.close()
         print(user_info)
+        cur.close()
+        try:
+            user_id=user_info[0]
+            first_name=user_info[1]
+            user_password=user_info[2]
+        except IndexError:
+            return redirect("/login?error=email+or+password+inalid")
+
+        if not bcrypt.check_password_hash(user_password,password):
+            return redirect("/login?error=email+or+password+inalid")
+
+        session["email"]=email
+        session["user_id"]=user_id
+
+
     return render_template('log_in.html')
 
 
@@ -54,7 +68,7 @@ def render_sign_up():
         connection = connect_to_database(DATABASE)
         query_insert = "INSERT INTO Session_db(fname,lname,password,email)VALUES(?,?,?,?)"
         cur = connection.cursor()
-        cur.execute(query_insert, (fname, lname, password, email))
+        cur.execute(query_insert, (fname, lname, hashed_password, email))
         connection.commit()
         product_list = cur.fetchall()
         return render_template('log_in.html')
