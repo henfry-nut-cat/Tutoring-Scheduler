@@ -6,7 +6,7 @@ from flask_bcrypt import Bcrypt
 DATABASE = 'sessions_db'
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-app.secret_key = ("wdjidwdwkdwa")
+app.secret_key = "wdjidwdwkdwa"
 
 
 def is_logged_in():
@@ -16,7 +16,6 @@ def is_logged_in():
     else:
         print("Logged in")
         return True
-
 
 def connect_to_database(db_file):
     try:
@@ -41,20 +40,21 @@ def render_log_in():  # put application's code here
         email = request.form['user_email'].strip().lower()
         password = request.form['user_password']
         query = "SELECT Student_id,fname,lname,password,email FROM session_db WHERE email=?"
+
         con = connect_to_database(DATABASE)
         cur = con.cursor()
         cur.execute(query, (email,))
-        user_info = cur.fetcall()
+        user_info = cur.fetchone()
         print(user_info)
         cur.close()
         try:
             user_id = user_info[0]
             first_name = user_info[1]
-            user_password = user_info[2]
+            user_password_check = user_info[2]
         except IndexError:
             return redirect("/login?error=email+or+password+inalid")
 
-        if not bcrypt.check_password_hash(user_password, password):
+        if not bcrypt.check_password_hash(password, user_password_check):
             return redirect("/login?error=email+or+password+inalid")
 
         session["email"] = email
