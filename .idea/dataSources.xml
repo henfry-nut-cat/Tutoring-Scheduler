@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="sessions_db" uuid="745f1152-5113-437a-bac5-a228fc9b95fc">
+    <data-source source="LOCAL" name="sessions_db" uuid="02f01f71-4ddb-4a6b-8b10-3386b77ce725">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\zxyhe\PycharmProjects\Tutoring-Scheduler\sessions_db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/sessions_db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
