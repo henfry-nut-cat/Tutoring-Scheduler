@@ -47,15 +47,16 @@ def render_log_in():  # put application's code here
         user_info = cur.fetchone()
         print(user_info)
         cur.close()
+        hashed_password_check = bcrypt.generate_password_hash(password)
         try:
             user_id = user_info[0]
             first_name = user_info[1]
-            user_password_check = user_info[2]
+            user_password_check = user_info[3]
         except IndexError:
-            return redirect("/login?error=email+or+password+inalid")
+            return redirect("/login?error=email+or+password+invalid")
 
-        if not bcrypt.check_password_hash(password, user_password_check):
-            return redirect("/login?error=email+or+password+inalid")
+        if not bcrypt.check_password_hash(hashed_password_check, user_password_check):
+            return redirect("/login?error=email+or+password+invalid")
 
         session["email"] = email
         session["user_id"] = user_id
