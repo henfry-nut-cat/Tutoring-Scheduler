@@ -47,7 +47,6 @@ def render_log_in():  # put application's code here
         user_info = cur.fetchone()
         print(user_info)
         cur.close()
-        hashed_password_check = bcrypt.generate_password_hash(password)
         try:
             user_id = user_info[0]
             first_name = user_info[1]
@@ -55,7 +54,7 @@ def render_log_in():  # put application's code here
         except IndexError:
             return redirect("/login?error=email+or+password+invalid")
 
-        if not bcrypt.check_password_hash(hashed_password_check, user_password_check):
+        if not bcrypt.check_password_hash(user_password_check, password):
             return redirect("/login?error=email+or+password+invalid")
 
         session["email"] = email
@@ -67,9 +66,16 @@ def render_log_in():  # put application's code here
     return render_template('log_in.html', logged_in=is_logged_in())
 
 
-@app.route('/student_log_in', methods=['POST', 'GET'])
-def render_student_log_in():  # put application's code here
-    print(":D")
+@app.route('/admin', methods=['POST', 'GET'])
+def render_admin():  # put application's code here
+    con= connect_to_database(DATABASE)
+    query = "SELECT * FROM Session_db"
+    cur=con.cursor()
+    cur.execute(query)
+    results=cur.fetchall()
+    print(f'the results are {results}')
+    con.close()
+    return render_template('admin.html', **NOT DONE**)
 
 
 @app.route('/sign_up', methods=['POST', 'GET'])
